@@ -61,7 +61,128 @@ mkdir -p db-data/
 mkdir -p logs/nginx/
 mkdir -p wordpress/
 ```
+![](https://user-images.githubusercontent.com/123317740/214648235-52991019-c093-4722-b7a0-8d9e5fc1f505.jpg)
+#### docker-compose.yml: It’s the configuration file,which we must create when starting a new project with Docker.
+#### nginx: This directory contains our additional nginx configuration,such as the virtual host,and so on.
+#### db-data: The data directory for mysql. ‘/var/lib/mysql’ data is mounted in the db-data directory.
+#### logs: Application log,nginx,mariadb,and php-fpm are all stored in this directory.
+#### wordpress: That directory will contain all WordPress files.
+create a new nginx configuration file for our wordpress virtual host in the ‘nginx’ directory.
+create a new wordpress.conf file:
+```
+vim nginx/wordpress.conf
+```
+```
+server {
+       listen 80;
+       server_name wp-hakase.co;
+       root /var/www/html;
+       index index.php;
+       access_log /var/log/nginx/hakase-access.log;
+       error_log /var/log/nginx/hakase-error.log;
+       location / {
+       try_files $uri $uri/ /index.php?$args;
+       }
+       location ~ \.php$ {
+       try_files $uri =404;
+       fastcgi_split_path_info ^(.+\.php)(/.+)$;
+       fastcgi_pass wordpress:9000;
+       fastcgi_index index.php;
+       include fastcgi_params;
+       fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+       fastcgi_param PATH_INFO $fastcgi_path_info;
+       }
+}
+```
+![](https://user-images.githubusercontent.com/123317740/214650003-351c4509-ffaf-4f75-a300-9b45ee6d0455.png)
 
+#### Configure Docker-Compose
+If we want to start the docker-compose project,we must first create the docker-compose.yml file
+Vim,edit docker-compose.yml:
+define our services,starting with Nginx on the first line.using the latest version of the Nginx official docker image.We’ve set up port mapping from port 80 on the container to port 80 on the host.Then,configure the docker volumes for our Nginx virtual host configuration, Nginx log files volume, and the web root directory volume ‘/var/www/html’ next. The WordPress container is linked to the Nginx container.
+```
+vim docker-compose.yml
+```
+```nginx:
+    image: nginx:latest
+    ports:
+        - '80:80'
+    volumes:
+        - ./nginx:/etc/nginx/conf.d
+        - ./logs/nginx:/var/log/nginx
+        - ./wordpress:/var/www/html
+    links:
+        - wordpress
+    restart: always
+mysql:
+    image: mariadb
+    ports:
+        - '3306:3306'
+    volumes:
+        - ./db-data:/var/lib/mysql
+    environment:
+        - MYSQL_ROOT_PASSWORD=Shk@7356498058
+    restart: always
+wordpress:
+    image: wordpress:4.7.1-php7.0-fpm
+    ports:
+        - '9000:9000'
+    volumes:
+        - ./wordpress:/var/www/html
+    environment:
+        - WORDPRESS_DB_NAME=wpdb
+        - WORDPRESS_TABLE_PREFIX=wp_
+        - WORDPRESS_DB_HOST=mysql
+        - WORDPRESS_DB_PASSWORD=Shk@7356498058
+    links:
+        - mysql
+    restart: always
+```
+![](https://user-images.githubusercontent.com/123317740/214650870-61ca1fc5-b782-4a89-a30d-8494718d0699.png)
+
+(we’ll need to specify the MySQL server.We’re using the most recent MariaDB image.Configure port 3306 for the container,and use the environment variable ‘MYSQL ROOT PASSWORD’ to set the MySQL root password.set up the MySQL data directory’s container volume.Using the WordPress 4.7 docker image with PHP-FPM 7.0 installed,we’ll set up the WordPress service.Set the PHP-fpm port to 9000.Then enable the docker volume for the web directory ‘/var/www/html’ to the host directory ‘wordpress,’.configure the database using the WordPress environment variable, and then link the WordPress service to mysql)
+
+docker-compose configuration is complete.
+
+#### Run Docker-compose
+
+.using Docker compose to create new containers. Start new containers based on our compose file in the wordpress-compose directory.
+
+```
+cd ~/wordpress-compose/ docker-compose up –d
+```
+![](https://user-images.githubusercontent.com/123317740/214651885-d6dada45-d221-4033-8636-46497cc9c4b3.jpg)
+```
+docker-compose ps
+```
+![](https://user-images.githubusercontent.com/123317740/214652119-7e03863a-0f43-4774-b2cb-bcaab93c8d78.jpg)
+the container’s log output
+
+```
+docker-compose logs nginx
+docker-compose logs mysql
+docker-compose logs wordpress
+```
+
+![](https://user-images.githubusercontent.com/123317740/214652678-05162944-e1aa-475b-abbb-270882e72055.jpg)
+
+
+#### Install WordPress
+
+check the system’s available ports/open ports before moving on to the next step. Make sure we have three ports open: 80, 3306, and 9000
+
+
+![](https://user-images.githubusercontent.com/123317740/214653002-1f0171d6-fd0a-4e6f-b384-c53273ca66ef.png)
+
+Now open a web browser and type the server’s URL or IP address into the address bar
+Now that your containers are up and running, you can finish your WordPress installation via the web interface. Load your domain in web browser and complete the wordpress installation. I'm attaching my completed wordpress site setup.
+
+
+![](https://user-images.githubusercontent.com/123317740/214654047-ecba442b-27ff-4171-ba29-bd1030e54b0f.jpg)
+
+The WordPress installation page can be viewed.Select the preferred language and click ‘Continue.’
+
+![](https://user-images.githubusercontent.com/123317740/214654157-270e8c31-3d9c-4ce0-9a03-d6db9c269b3c.jpg)
 
 
 
