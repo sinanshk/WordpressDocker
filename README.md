@@ -1,10 +1,15 @@
-# WordpressDocker
+
 # Host a Wordpress application in Docker using Nginx,PHP-FPM,and MySQL
+
 ### Introduction
+
 WordPress is now used by over half of the top one million websites on the internet (Content Management System). WordPress is extremely user-friendly, especially for non-technical users, making it a popular CMS choice. Installing a LAMP (Linux, Apache, MySQL, and PHP) or LEMP (Linux, Nginx, MySQL, and PHP) stack to run WordPress is often time-consuming. You may ease the process of setting up your preferred stack and installing WordPress by using tools like Docker and Docker Compose.
 You'll learn how to set up a multi-container WordPress installation in this article. A MySQL database, a Nginx web server, and WordPress itself will be included in your containers. You can additionally safeguard your installation by using Let's Encrypt to get TLS/SSL certificates for the domain you want to use with your site.
+
 ![](https://user-images.githubusercontent.com/65948438/162495574-7652e457-f7a7-43fc-bd7d-4e9921e60664.png)
+
 ## To install Docker on an Amazon EC2 instance
+
 Launch an instance with the Amazon Linux 2 AMI.see Launching an instance in the Amazon EC2 User Guide for Linux Instances.
 Connect to your instance using SSH. For more information, see Connect to your Linux instance using SSH in the Amazon EC2 User Guide for Linux Instances.
 Update the installed packages and package cache on your instance.
@@ -21,7 +26,9 @@ sudo service docker start
 sudo systemctl enable docker
 ```
 ### Install Docker-Compose
+
 Docker-compose is available in the PyPI python repository because it is a python script.python pip can be used to install it.we must first install Python and Python Pip on our system.
+
 Firstly, Install python and python-pip by using these commands:
 ```
 sudo yum install -y python python-pip
@@ -34,13 +41,19 @@ use the docker-compose command to verify the installation
 ```
 docker-compose –v
 ```
+
 ### Setup WordPress
+
 The system now has docker and docker-compose installed.in this step,we’ll create and configure a Docker-compose environment for our WordPress project.The ‘WordPress’ PHP application will be deployed as docker containers managed by docker-compose,with Nginx as the web server and MariaDB for the MySQL database.Each application will run in its own container,
+
 ##### -nginx: We use the ‘nginx: latest’ official docker image
+
 ##### -WordPress: On docker-hub, WordPress provides some docker images. We’ll use latest wordpress with latest PHP-FPM on it
+
 ##### -MySQL : use the most recent version of MariaDB’s official container
 we require three docker images. We won’t run docker as root;we’ll use a regular Linux user.
 So simply to create a new user
+
 ```
 useradd sinan
 passwd sinan
@@ -62,11 +75,17 @@ mkdir -p logs/nginx/
 mkdir -p wordpress/
 ```
 ![](https://user-images.githubusercontent.com/123317740/214648235-52991019-c093-4722-b7a0-8d9e5fc1f505.jpg)
+
 #### docker-compose.yml: It’s the configuration file,which we must create when starting a new project with Docker.
+
 #### nginx: This directory contains our additional nginx configuration,such as the virtual host,and so on.
+
 #### db-data: The data directory for mysql. ‘/var/lib/mysql’ data is mounted in the db-data directory.
+
 #### logs: Application log,nginx,mariadb,and php-fpm are all stored in this directory.
+
 #### wordpress: That directory will contain all WordPress files.
+
 create a new nginx configuration file for our wordpress virtual host in the ‘nginx’ directory.
 create a new wordpress.conf file:
 ```
@@ -94,12 +113,15 @@ server {
        }
 }
 ```
+
 ![](https://user-images.githubusercontent.com/123317740/214650003-351c4509-ffaf-4f75-a300-9b45ee6d0455.png)
 
 #### Configure Docker-Compose
+
 If we want to start the docker-compose project,we must first create the docker-compose.yml file
 Vim,edit docker-compose.yml:
 define our services,starting with Nginx on the first line.using the latest version of the Nginx official docker image.We’ve set up port mapping from port 80 on the container to port 80 on the host.Then,configure the docker volumes for our Nginx virtual host configuration, Nginx log files volume, and the web root directory volume ‘/var/www/html’ next. The WordPress container is linked to the Nginx container.
+
 ```
 vim docker-compose.yml
 ```
@@ -138,6 +160,7 @@ wordpress:
         - mysql
     restart: always
 ```
+
 ![](https://user-images.githubusercontent.com/123317740/214650870-61ca1fc5-b782-4a89-a30d-8494718d0699.png)
 
 (we’ll need to specify the MySQL server.We’re using the most recent MariaDB image.Configure port 3306 for the container,and use the environment variable ‘MYSQL ROOT PASSWORD’ to set the MySQL root password.set up the MySQL data directory’s container volume.Using the WordPress 4.7 docker image with PHP-FPM 7.0 installed,we’ll set up the WordPress service.Set the PHP-fpm port to 9000.Then enable the docker volume for the web directory ‘/var/www/html’ to the host directory ‘wordpress,’.configure the database using the WordPress environment variable, and then link the WordPress service to mysql)
@@ -151,11 +174,15 @@ docker-compose configuration is complete.
 ```
 cd ~/wordpress-compose/ docker-compose up –d
 ```
+
 ![](https://user-images.githubusercontent.com/123317740/214651885-d6dada45-d221-4033-8636-46497cc9c4b3.jpg)
+
 ```
 docker-compose ps
 ```
+
 ![](https://user-images.githubusercontent.com/123317740/214652119-7e03863a-0f43-4774-b2cb-bcaab93c8d78.jpg)
+
 the container’s log output
 
 ```
