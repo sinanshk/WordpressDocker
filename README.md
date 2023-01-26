@@ -81,17 +81,14 @@ mkdir -p db-data/
 mkdir -p logs/nginx/
 mkdir -p wordpress/
 ```
-![](https://user-images.githubusercontent.com/123317740/214648235-52991019-c093-4722-b7a0-8d9e5fc1f505.jpg)
 
-#### docker-compose.yml: It’s the configuration file,which we must create when starting a new project with Docker.
+![](https://user-images.githubusercontent.com/123317740/214809138-f136b636-372d-4679-9102-ad3f288f4495.png)
 
-#### nginx: This directory contains our additional nginx configuration,such as the virtual host,and so on.
-
-#### db-data: The data directory for mysql. ‘/var/lib/mysql’ data is mounted in the db-data directory.
-
-#### logs: Application log,nginx,mariadb,and php-fpm are all stored in this directory.
-
-#### wordpress: That directory will contain all WordPress files.
+##### docker-compose.yml: It’s the configuration file,which we must create when starting a new project with Docker.
+##### nginx: This directory contains our additional nginx configuration,such as the virtual host,and so on.
+##### db-data: The data directory for mysql. ‘/var/lib/mysql’ data is mounted in the db-data directory.
+##### logs: Application log,nginx,mariadb,and php-fpm are all stored in this directory.
+##### wordpress: That directory will contain all WordPress files.
 
 create a new nginx configuration file for our wordpress virtual host in the ‘nginx’ directory.
 create a new wordpress.conf file:
@@ -121,7 +118,7 @@ server {
 }
 ```
 
-![](https://user-images.githubusercontent.com/123317740/214650003-351c4509-ffaf-4f75-a300-9b45ee6d0455.png)
+![](https://user-images.githubusercontent.com/123317740/214809455-d0193336-33ad-4cb9-853b-36c31be936a4.png)
 
 #### Configure Docker-Compose
 
@@ -170,7 +167,7 @@ wordpress:
     restart: always
 ```
 
-![](https://user-images.githubusercontent.com/123317740/214650870-61ca1fc5-b782-4a89-a30d-8494718d0699.png)
+![](https://user-images.githubusercontent.com/123317740/214809780-236d976c-90d1-4d34-be2a-96a9209410dd.png)
 
 (we’ll need to specify the MySQL server.using the most recent MariaDB image.Configure port 3306 for the container,and use the environment variable ‘MYSQL ROOT PASSWORD’ to set the MySQL root password.set up the MySQL data directory’s container volume.Using the WordPress 4.7 docker image with PHP-FPM 7.0 installed,we’ll set up the WordPress service.Set the PHP-fpm port to 9000.Then enable the docker volume for the web directory ‘/var/www/html’ to the host directory ‘wordpress,’.configure the database using the WordPress environment variable, and then link the WordPress service to mysql)
 
@@ -184,31 +181,28 @@ using Docker compose to create new containers.Start new containers based on our 
 cd ~/wordpress-compose/ docker-compose up –d
 ```
 
-![](https://user-images.githubusercontent.com/123317740/214651885-d6dada45-d221-4033-8636-46497cc9c4b3.jpg)
+![](https://user-images.githubusercontent.com/123317740/214810084-15ce94e6-8320-4257-9d3d-bc7180d54eff.png)
 
 ```
 docker-compose ps
 ```
 
-![](https://user-images.githubusercontent.com/123317740/214652119-7e03863a-0f43-4774-b2cb-bcaab93c8d78.jpg)
+![](https://user-images.githubusercontent.com/123317740/214810201-32f9045a-5db0-4e94-9969-41066b029689.png)
 
 
 #### Install WordPress
 
 check the system’s available ports/open ports before moving on to the next step. Make sure we have three ports open: 80, 3306, and 9000
-
-
-![](https://user-images.githubusercontent.com/123317740/214653002-1f0171d6-fd0a-4e6f-b384-c53273ca66ef.png)
-
 Now open a web browser and type the server’s URL or IP address into the address bar
 Load your domain in web browser and complete the wordpress installation. I'm attaching my completed wordpress site setup.
 
-
-![](https://user-images.githubusercontent.com/123317740/214654047-ecba442b-27ff-4171-ba29-bd1030e54b0f.jpg)
+![](https://user-images.githubusercontent.com/123317740/214810564-3667bfe2-500c-481f-947c-e45c4e7e7316.png)
 
 The WordPress installation page can be viewed.Select the preferred language and click ‘Continue.’
 
-![](https://user-images.githubusercontent.com/123317740/214654157-270e8c31-3d9c-4ce0-9a03-d6db9c269b3c.jpg)
+![](https://user-images.githubusercontent.com/123317740/214810659-df7c1559-31df-4734-82d1-e71714b1bf5f.png)
+![](https://user-images.githubusercontent.com/123317740/214810702-cfd8e437-1936-47bc-8a6f-6621ad5130e6.png)
+
 
 
 
