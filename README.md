@@ -10,8 +10,8 @@ WordPress is now used by over half of the top one million websites on the intern
 
 ## To install Docker on an Amazon EC2 instance
 
-Launch an instance with the Amazon Linux 2 AMI.see Launching an instance in the Amazon EC2 User Guide for Linux Instances.
-Connect to your instance using SSH. For more information, see Connect to your Linux instance using SSH in the Amazon EC2 User Guide for Linux Instances.
+Launch an instance with the Amazon Linux 2 AMI.Connect to your instance using SSH.
+
 Update the installed packages and package cache on your instance.
 ```
 sudo yum update –y
@@ -60,7 +60,6 @@ The system now has docker and docker-compose installed.in this step,we’ll crea
 
 ##### -MySQL : use the most recent version of MariaDB’s official container
 we require three docker images. We won’t run docker as root;we’ll use a regular Linux user.
-So simply to create a new user
 
 ```
 useradd sinan
@@ -126,7 +125,7 @@ server {
 
 #### Configure Docker-Compose
 
-If we want to start the docker-compose project,we must first create the docker-compose.yml file
+first create the docker-compose.yml file
 Vim,edit docker-compose.yml:
 define our services,starting with Nginx on the first line.using the latest version of the Nginx official docker image.We’ve set up port mapping from port 80 on the container to port 80 on the host.Then,configure the docker volumes for our Nginx virtual host configuration, Nginx log files volume, and the web root directory volume ‘/var/www/html’ next. The WordPress container is linked to the Nginx container.
 
@@ -153,7 +152,7 @@ mysql:
     volumes:
         - ./db-data:/var/lib/mysql
     environment:
-        - MYSQL_ROOT_PASSWORD=Shk@7356498058
+        - MYSQL_ROOT_PASSWORD=user_passwd
     restart: always
 wordpress:
     image: wordpress:4.7.1-php7.0-fpm
@@ -165,7 +164,7 @@ wordpress:
         - WORDPRESS_DB_NAME=wpdb
         - WORDPRESS_TABLE_PREFIX=wp_
         - WORDPRESS_DB_HOST=mysql
-        - WORDPRESS_DB_PASSWORD=Shk@7356498058
+        - WORDPRESS_DB_PASSWORD=user_passwd
     links:
         - mysql
     restart: always
@@ -173,13 +172,13 @@ wordpress:
 
 ![](https://user-images.githubusercontent.com/123317740/214650870-61ca1fc5-b782-4a89-a30d-8494718d0699.png)
 
-(we’ll need to specify the MySQL server.We’re using the most recent MariaDB image.Configure port 3306 for the container,and use the environment variable ‘MYSQL ROOT PASSWORD’ to set the MySQL root password.set up the MySQL data directory’s container volume.Using the WordPress 4.7 docker image with PHP-FPM 7.0 installed,we’ll set up the WordPress service.Set the PHP-fpm port to 9000.Then enable the docker volume for the web directory ‘/var/www/html’ to the host directory ‘wordpress,’.configure the database using the WordPress environment variable, and then link the WordPress service to mysql)
+(we’ll need to specify the MySQL server.using the most recent MariaDB image.Configure port 3306 for the container,and use the environment variable ‘MYSQL ROOT PASSWORD’ to set the MySQL root password.set up the MySQL data directory’s container volume.Using the WordPress 4.7 docker image with PHP-FPM 7.0 installed,we’ll set up the WordPress service.Set the PHP-fpm port to 9000.Then enable the docker volume for the web directory ‘/var/www/html’ to the host directory ‘wordpress,’.configure the database using the WordPress environment variable, and then link the WordPress service to mysql)
 
 docker-compose configuration is complete.
 
 #### Run Docker-compose
 
-.using Docker compose to create new containers. Start new containers based on our compose file in the wordpress-compose directory.
+using Docker compose to create new containers.Start new containers based on our compose file in the wordpress-compose directory.
 
 ```
 cd ~/wordpress-compose/ docker-compose up –d
@@ -193,16 +192,6 @@ docker-compose ps
 
 ![](https://user-images.githubusercontent.com/123317740/214652119-7e03863a-0f43-4774-b2cb-bcaab93c8d78.jpg)
 
-the container’s log output
-
-```
-docker-compose logs nginx
-docker-compose logs mysql
-docker-compose logs wordpress
-```
-
-![](https://user-images.githubusercontent.com/123317740/214652678-05162944-e1aa-475b-abbb-270882e72055.jpg)
-
 
 #### Install WordPress
 
@@ -212,7 +201,7 @@ check the system’s available ports/open ports before moving on to the next ste
 ![](https://user-images.githubusercontent.com/123317740/214653002-1f0171d6-fd0a-4e6f-b384-c53273ca66ef.png)
 
 Now open a web browser and type the server’s URL or IP address into the address bar
-Now that your containers are up and running, you can finish your WordPress installation via the web interface. Load your domain in web browser and complete the wordpress installation. I'm attaching my completed wordpress site setup.
+Load your domain in web browser and complete the wordpress installation. I'm attaching my completed wordpress site setup.
 
 
 ![](https://user-images.githubusercontent.com/123317740/214654047-ecba442b-27ff-4171-ba29-bd1030e54b0f.jpg)
