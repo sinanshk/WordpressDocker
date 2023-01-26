@@ -1,4 +1,4 @@
-```
+
 nginx:
     image: nginx:latest
     ports:
@@ -17,7 +17,7 @@ mysql:
     volumes:
         - ./db-data:/var/lib/mysql
     environment:
-        - MYSQL_ROOT_PASSWORD=Shk@7356498058
+        - MYSQL_ROOT_PASSWORD=Password
     restart: always
 wordpress:
     image: wordpress:4.7.1-php7.0-fpm
@@ -29,8 +29,8 @@ wordpress:
         - WORDPRESS_DB_NAME=wpdb
         - WORDPRESS_TABLE_PREFIX=wp_
         - WORDPRESS_DB_HOST=mysql
-        - WORDPRESS_DB_PASSWORD=Shk@7356498058
+        - WORDPRESS_DB_PASSWORD=Password
     links:
         - mysql
     restart: always
-```
+
