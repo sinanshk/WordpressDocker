@@ -3,8 +3,7 @@
 
 ### Introduction
 
-WordPress is now used by over half of the top one million websites on the internet (Content Management System). WordPress is extremely user-friendly, especially for non-technical users, making it a popular CMS choice. Installing a LAMP (Linux, Apache, MySQL, and PHP) or LEMP (Linux, Nginx, MySQL, and PHP) stack to run WordPress is often time-consuming. You may ease the process of setting up your preferred stack and installing WordPress by using tools like Docker and Docker Compose.
-You'll learn how to set up a multi-container WordPress installation in this article. A MySQL database, a Nginx web server, and WordPress itself will be included in your containers. You can additionally safeguard your installation by using Let's Encrypt to get TLS/SSL certificates for the domain you want to use with your site.
+WordPress is now used by over half of the top one million websites on the internet(Content Management System).WordPress is extremely user-friendly,especially for non-technical users,making it a popular CMS choice.Installing a LAMP (Linux,Apache,MySQL,and PHP)orLEMP (Linux,Nginx,MySQL,andPHP)stack to run WordPress is often time-consuming.You may ease the process of setting up your preferred stack and installing WordPress by using tools like Docker and Docker Compose.A MySQL database,a Nginx web server,and WordPress itself will be included in your containers.
 
 ![](https://user-images.githubusercontent.com/65948438/162495574-7652e457-f7a7-43fc-bd7d-4e9921e60664.png)
 
@@ -16,11 +15,15 @@ Update the installed packages and package cache on your instance.
 ```
 sudo yum update –y
 ```
+
 Install the most recent Docker Engine package
+
 ```
 sudo amazon-linux-extras install docker
 ```
+
 Start and enable the Docker service
+
 ```
 sudo service docker start
 sudo systemctl enable docker
@@ -33,11 +36,15 @@ Firstly, Install python and python-pip by using these commands:
 ```
 sudo yum install -y python python-pip
 ```
+
 using the pip command, install docker-compose
+
 ```
 pip install docker-compose
 ```
+
 use the docker-compose command to verify the installation
+
 ```
 docker-compose –v
 ```
@@ -125,7 +132,9 @@ define our services,starting with Nginx on the first line.using the latest versi
 ```
 vim docker-compose.yml
 ```
-```nginx:
+
+```
+nginx:
     image: nginx:latest
     ports:
         - '80:80'
