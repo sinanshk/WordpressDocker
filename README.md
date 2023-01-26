@@ -5,6 +5,8 @@
 
 WordPress is now used by over half of the top one million websites on the internet(Content Management System).WordPress is extremely user-friendly,especially for non-technical users,making it a popular CMS choice.Installing a LAMP (Linux,Apache,MySQL,and PHP)orLEMP (Linux,Nginx,MySQL,andPHP)stack to run WordPress is often time-consuming.You may ease the process of setting up your preferred stack and installing WordPress by using tools like Docker and Docker Compose.A MySQL database,a Nginx web server,and WordPress itself will be included in your containers.
 
+![](https://user-images.githubusercontent.com/123317740/214765856-f1c88183-9f6a-4bb3-bba5-05599e448b45.png)
+
 
 ## To install Docker on an Amazon EC2 instance
 
